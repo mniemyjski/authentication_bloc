@@ -1,0 +1,52 @@
+name: authentication_bloc
+description: A new Flutter project.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  easy_localization: ^3.0.0
+  easy_localization_loader: ^1.0.0
+
+  flutter_bloc: ^7.0.1
+
+  equatable: ^2.0.2
+
+  firebase_core: ^1.2.0
+  firebase_auth: ^1.2.0
+  google_sign_in: ^5.0.4
+
+  cloud_firestore: ^2.2.0
+
+  connectivity_plus: ^1.0.1
+  flash: ^2.0.0
+
+  font_awesome_flutter: ^9.0.0
+  google_fonts: ^2.1.0
+  cupertino_icons: ^1.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  build_runner: ^2.0.4
+  logger: ^1.0.0
+  bloc_test: ^8.0.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - resources/
+    - resources/images/
+    - resources/images/social/
+
+
+
