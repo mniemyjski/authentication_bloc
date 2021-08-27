@@ -2,6 +2,9 @@ part of 'auth_bloc.dart';
 
 abstract class AuthEvent extends Equatable {
   const AuthEvent();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class AuthUserChanged extends AuthEvent {
@@ -13,11 +16,6 @@ class AuthUserChanged extends AuthEvent {
   List<Object?> get props => [user];
 }
 
-class AuthLogoutRequested extends AuthEvent {
-  final String email;
+class AuthLogoutRequested extends AuthEvent {}
 
-  AuthLogoutRequested(this.email);
-
-  @override
-  List<Object?> get props => [email];
-}
+class AuthDeleteRequested extends AuthEvent {}

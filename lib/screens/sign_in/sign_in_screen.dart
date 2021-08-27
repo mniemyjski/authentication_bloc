@@ -6,6 +6,7 @@ import 'package:authentication_bloc/screens/sign_in/widgets/email_form.dart';
 import 'package:flutter/material.dart';
 import 'package:authentication_bloc/utilities/utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -49,14 +50,23 @@ class SignInScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 32),
-                  child: Text(
-                    Constants.app_name(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 56,
-                    ),
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 0),
+                    child: RichText(
+                        text: TextSpan(
+                      style: TextStyle(fontSize: 56),
+                      children: [
+                        TextSpan(
+                          text: Constants.app_name_first(),
+                          style: GoogleFonts.markaziText(color: Colors.black87, fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: Constants.app_name_second(),
+                          style: GoogleFonts.markaziText(color: Colors.blue[800], fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    )),
                   ),
                 ),
                 if (state.signInFormType == SignInFormType.initial) ButtonSignInWithGoogle(),

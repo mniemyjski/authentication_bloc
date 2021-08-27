@@ -1,20 +1,27 @@
 import 'package:authentication_bloc/screens/screens.dart';
-import 'package:authentication_bloc/screens/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class CustomRouter {
   static Route onGenerateRoute(RouteSettings settings) {
-    print('Route: ${settings.name}');
-
-    // final args = settings.arguments as HomeScreenArguments;
-
     switch (settings.name) {
       case SplashScreen.routeName:
         return SplashScreen.route();
       case SignInScreen.routeName:
         return SignInScreen.route();
       case HomeScreen.routeName:
-        return HomeScreen.route();
+        final args = settings.arguments as bool?;
+        return HomeScreen.route(args ?? false);
+      case SettingsScreen.routeName:
+        return SettingsScreen.route();
+      case AccountEditScreen.routeName:
+        return AccountEditScreen.route();
+      case AccountCreateScreen.routeName:
+        return AccountCreateScreen.route();
+      case IntroScreen.routeName:
+        return IntroScreen.route();
+      case CropImageScreen.routeName:
+        final args = settings.arguments as CropScreenArguments;
+        return CropImageScreen.route(args);
       default:
         return _errorRoute();
     }

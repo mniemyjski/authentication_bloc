@@ -1,6 +1,6 @@
 import 'package:authentication_bloc/models/models.dart';
 import 'package:authentication_bloc/screens/sign_in/cubit/sign_in_cubit.dart';
-import 'package:authentication_bloc/screens/sign_in/validators.dart';
+import 'package:authentication_bloc/utilities/validators.dart';
 import 'package:authentication_bloc/widgets/custom_flash_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:authentication_bloc/widgets/widgets.dart';

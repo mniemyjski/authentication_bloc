@@ -9,6 +9,7 @@ abstract class _BaseAuthRepository {
   Future<User?> signInWithEmailAndPassword(String email, String password);
   Future<User?> createUserWithEmailAndPassword(String email, String password);
   Future<void> signOut();
+  Future<void> delete();
   Future<void> resetPassword(String email);
 }
 
@@ -84,5 +85,18 @@ class AuthRepository extends _BaseAuthRepository {
   @override
   Future<void> resetPassword(String email) async {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
+  @override
+  Future<void> delete() async {
+    try {
+      final googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+      await _firebaseAuth.currentUser!.delete();
+    } on FirebaseAuthException catch (e) {
+      throw Failure(code: e.code, message: e.message ?? '');
+    } on PlatformException catch (e) {
+      throw Failure(code: e.code, message: e.message ?? '');
+    }
   }
 }

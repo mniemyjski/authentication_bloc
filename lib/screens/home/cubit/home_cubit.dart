@@ -10,8 +10,4 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit({required AuthRepository authRepository})
       : _authRepository = authRepository,
         super(HomeState.initial());
-
-  void signOut() async {
-    await _authRepository.signOut();
-  }
 }

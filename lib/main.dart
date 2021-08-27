@@ -1,3 +1,5 @@
+import 'package:authentication_bloc/cubit/upload_to_storage/upload_to_storage_cubit.dart';
+import 'package:authentication_bloc/repositories/preference_repository.dart';
 import 'package:authentication_bloc/screens/screens.dart';
 import 'package:authentication_bloc/utilities/utilities.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -6,15 +8,25 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:url_strategy/url_strategy.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'bloc/bloc.dart';
+import 'cubit/cubit.dart';
 import 'repositories/repositories.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
-  EquatableConfig.stringify = true;
+  EquatableConfig.stringify = false;
+  setPathUrlStrategy();
+  Bloc.observer = SimpleBlocObserver();
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: kIsWeb ? HydratedStorage.webStorageDirectory : await getTemporaryDirectory(),
+  );
   runApp(EasyLocalization(
       supportedLocales: [
         Locale('pl'),
@@ -36,27 +48,65 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<AuthRepository>(
           create: (_) => AuthRepository(),
         ),
+        RepositoryProvider<AccountRepository>(
+          create: (_) => AccountRepository(),
+        ),
+        RepositoryProvider<StorageRepository>(
+          create: (_) => StorageRepository(),
+        ),
+        RepositoryProvider<PreferenceRepository>(
+          create: (_) => PreferenceRepository(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider<DarkModeCubit>(
+            create: (context) => DarkModeCubit(),
+          ),
           BlocProvider<AuthBloc>(
-            create: (context) => AuthBloc(authRepository: context.read<AuthRepository>()),
+            create: (context) => AuthBloc(
+              authRepository: context.read<AuthRepository>(),
+            ),
+          ),
+          BlocProvider<UploadToStorageCubit>(
+            create: (context) => UploadToStorageCubit(
+              context.read<StorageRepository>(),
+            ),
+          ),
+          BlocProvider<AccountCubit>(
+            create: (context) => AccountCubit(
+              authBloc: context.read<AuthBloc>(),
+              uploadToStorageCubit: context.read<UploadToStorageCubit>(),
+              accountRepository: context.read<AccountRepository>(),
+            ),
+          ),
+          BlocProvider<PreferenceCubit>(
+            create: (context) => PreferenceCubit(
+              authBloc: context.read<AuthBloc>(),
+              preferenceRepository: context.read<PreferenceRepository>(),
+            ),
           ),
         ],
-        child: MaterialApp(
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            fontFamily: 'Georgia',
-            primarySwatch: Colors.indigo,
-          ),
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-          ),
-          onGenerateRoute: CustomRouter.onGenerateRoute,
-          initialRoute: SplashScreen.routeName,
+        child: BlocBuilder<DarkModeCubit, bool>(
+          builder: (context, state) {
+            return MaterialApp(
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
+              title: 'Flutter Demo',
+              theme: ThemeData(
+                fontFamily: 'Georgia',
+                primarySwatch: Colors.indigo,
+              ),
+              darkTheme: ThemeData(
+                fontFamily: 'Georgia',
+                brightness: Brightness.dark,
+              ),
+              themeMode: state ? ThemeMode.dark : ThemeMode.light,
+              onGenerateRoute: CustomRouter.onGenerateRoute,
+              initialRoute: SplashScreen.routeName,
+            );
+          },
         ),
       ),
     );

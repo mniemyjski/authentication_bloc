@@ -34,10 +34,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield* _mapAuthUserChangedToState(event);
     } else if (event is AuthLogoutRequested) {
       await _authRepository.signOut();
+    } else if (event is AuthDeleteRequested) {
+      await _authRepository.delete();
     }
   }
 
   Stream<AuthState> _mapAuthUserChangedToState(AuthUserChanged event) async* {
-    yield event.user != null ? AuthState.authenticated(user: event.user) : AuthState.unauthenticated();
+    yield event.user != null ? AuthState.authenticated(user: event.user!) : AuthState.unauthenticated();
   }
 }

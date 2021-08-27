@@ -19,6 +19,9 @@ class SignInState extends Equatable {
   });
 
   @override
+  bool get stringify => true;
+
+  @override
   List<Object> get props => [email, password, signInStatus, signInFormType, failure];
 
   factory SignInState.initial() {

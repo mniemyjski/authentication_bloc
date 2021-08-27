@@ -19,4 +19,11 @@ abstract class Validators {
     } else
       return null;
   }
+
+  static name(String? name) {
+    if (name == null || name.isEmpty) {
+      return "* Required";
+    }
+    return null;
+  }
 }
