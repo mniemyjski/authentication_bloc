@@ -25,23 +25,3 @@ class AuthState extends Equatable {
   @override
   List<Object?> get props => [user, status];
 }
-
-// abstract class AuthState extends Equatable {
-//   const AuthState();
-//
-//   @override
-//   List<Object?> get props => [];
-// }
-//
-// class AuthStateUnknown extends AuthState {}
-//
-// class AuthStateUnauthenticated extends AuthState {}
-//
-// class AuthStateAuthenticated extends AuthState {
-//   final User user;
-//
-//   AuthStateAuthenticated(this.user);
-//
-//   @override
-//   List<Object?> get props => [user];
-// }

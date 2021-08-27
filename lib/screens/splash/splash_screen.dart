@@ -23,7 +23,7 @@ class SplashScreen extends StatelessWidget {
       body: MultiBlocListener(
         listeners: [
           BlocListener<AuthBloc, AuthState>(
-            listenWhen: (prevState, state) => prevState != state,
+            listenWhen: (prevState, state) => prevState.status != state.status,
             listener: (context, state) {
               if (state.status == EAuthStatus.unauthenticated) {
                 Navigator.of(context).pushNamed(SignInScreen.routeName);

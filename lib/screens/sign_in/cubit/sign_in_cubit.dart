@@ -17,7 +17,7 @@ class SignInCubit extends Cubit<SignInState> {
     emit(state.copyWith(signInStatus: SignInStatus.loading));
     try {
       await _authRepository.signInWithGoogle();
-      emit(state.copyWith(signInStatus: SignInStatus.success));
+      await emitSignInStatusSucceed();
     } on Failure catch (e) {
       emit(SignInState.initial());
       return e;
@@ -38,10 +38,10 @@ class SignInCubit extends Cubit<SignInState> {
       emit(state.copyWith(signInStatus: SignInStatus.loading));
       if (state.signInFormType == SignInFormType.signIn) {
         await _authRepository.signInWithEmailAndPassword(state.email, state.password);
-        emit(state.copyWith(signInStatus: SignInStatus.success));
+        await emitSignInStatusSucceed();
       } else if (state.signInFormType == SignInFormType.register) {
         await _authRepository.createUserWithEmailAndPassword(state.email, state.password);
-        emit(state.copyWith(signInStatus: SignInStatus.success));
+        await emitSignInStatusSucceed();
       } else if (state.signInFormType == SignInFormType.reset) {
         await _authRepository.resetPassword(state.email);
         emit(SignInState.initial());
@@ -62,5 +62,10 @@ class SignInCubit extends Cubit<SignInState> {
     if (state.signInFormType == SignInFormType.signIn) return Languages.login();
     if (state.signInFormType == SignInFormType.register) return Languages.register();
     return Languages.reset_password();
+  }
+
+  emitSignInStatusSucceed() async {
+    await Future.delayed(Duration(seconds: 5));
+    emit(state.copyWith(signInStatus: SignInStatus.success));
   }
 }
