@@ -33,8 +33,6 @@ class SplashScreen extends StatelessWidget {
           BlocListener<AccountCubit, AccountState>(
               listenWhen: (prevState, state) => prevState.status != state.status,
               listener: (context, state) {
-                Navigator.pushNamedAndRemoveUntil(context, SplashScreen.routeName, (_) => false);
-
                 if (state.status == EAccountStatus.created) {
                   Navigator.of(context).pushNamed(HomeScreen.routeName, arguments: true);
                 }
