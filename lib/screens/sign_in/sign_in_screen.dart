@@ -59,7 +59,7 @@ class SignInScreen extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: Constants.app_name_first(),
-                          style: GoogleFonts.markaziText(color: Colors.black87, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.markaziText(fontWeight: FontWeight.bold),
                         ),
                         TextSpan(
                           text: Constants.app_name_second(),
