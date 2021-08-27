@@ -1,5 +1,7 @@
+import 'package:authentication_bloc/cubit/cubit.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 customFlashBar(BuildContext context, String text) {
   return showFlash(
@@ -15,7 +17,11 @@ customFlashBar(BuildContext context, String text) {
           boxShadows: kElevationToShadow[4],
           horizontalDismissDirection: HorizontalDismissDirection.horizontal,
           child: FlashBar(
-            content: Text(text),
+            content: BlocBuilder<DarkModeCubit, bool>(
+              builder: (context, state) {
+                return Text(text, style: TextStyle(color: state ? Colors.black : Colors.white));
+              },
+            ),
           ),
         ),
       );
