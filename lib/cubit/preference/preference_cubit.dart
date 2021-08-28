@@ -20,19 +20,21 @@ class PreferenceCubit extends Cubit<PreferenceState> {
   })  : _authBloc = authBloc,
         _preferenceRepository = preferenceRepository,
         super(PreferenceState.unknown()) {
-    _authSubscription = _authBloc.stream.listen((event) {
-      if (event.status == EAuthStatus.authenticated) {
-        _preferenceSubscription = _preferenceRepository.streamPreference(event.user!.uid).listen((preference) {
-          preference != null ? emit(PreferenceState.created(preference)) : emit(PreferenceState.unCreated());
-        });
-      } else {
-        try {
-          _preferenceSubscription.cancel();
-        } on Exception catch (e) {}
-
-        emit(PreferenceState.unknown());
+    print('test1: ${_authBloc.state.status}');
+    if (_authBloc.state.status == EAuthStatus.authenticated) {
+      print('test2: ${_authBloc.state.status}');
+      _preferenceSubscription = _preferenceRepository.streamPreference(_authBloc.state.user!.uid).listen((preference) {
+        print('test3: ${preference}');
+        preference != null ? emit(PreferenceState.created(preference)) : emit(PreferenceState.unCreated());
+      });
+    } else {
+      try {
+        _preferenceSubscription.cancel();
+      } catch (e) {
+        Failure(message: "Not Initialization");
       }
-    });
+      emit(PreferenceState.unknown());
+    }
   }
 
   createPreference() async {

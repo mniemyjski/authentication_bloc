@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:authentication_bloc/bloc/bloc.dart';
-import 'package:authentication_bloc/cubit/upload_to_storage/upload_to_storage_cubit.dart';
 import 'package:authentication_bloc/models/models.dart';
 import 'package:authentication_bloc/repositories/repositories.dart';
 import 'package:bloc/bloc.dart';
@@ -14,17 +12,14 @@ part 'account_state.dart';
 class AccountCubit extends Cubit<AccountState> {
   final AccountRepository _accountRepository;
   final AuthBloc _authBloc;
-  final UploadToStorageCubit _uploadToStorageCubit;
   late StreamSubscription<Account?> _accountSubscription;
   late StreamSubscription<AuthState> _authSubscription;
 
   AccountCubit({
     required AccountRepository accountRepository,
     required AuthBloc authBloc,
-    required UploadToStorageCubit uploadToStorageCubit,
   })  : _accountRepository = accountRepository,
         _authBloc = authBloc,
-        _uploadToStorageCubit = uploadToStorageCubit,
         super(AccountState.unknown()) {
     _authSubscription = _authBloc.stream.listen((event) {
       if (event.status == EAuthStatus.authenticated) {
@@ -34,8 +29,9 @@ class AccountCubit extends Cubit<AccountState> {
       } else {
         try {
           _accountSubscription.cancel();
-        } on Exception catch (e) {}
-
+        } catch (e) {
+          Failure(message: "Not Initialization");
+        }
         emit(AccountState.unknown());
       }
     });
@@ -52,11 +48,8 @@ class AccountCubit extends Cubit<AccountState> {
     }
   }
 
-  void updateAvatar(Uint8List uint8list) async {
-    String uid = _authBloc.state.user!.uid;
-    String path = 'accounts/$uid/avatar/$uid';
-    String url = await _uploadToStorageCubit.uploadToStorage(uint8list, path);
-    _accountRepository.updateAccount(state.account!.copyWith(photoUrl: url));
+  Future<void> updateAvatarUrl(String url) async {
+    await _accountRepository.updateAccount(state.account!.copyWith(photoUrl: url));
   }
 
   Future<bool> createAccount(String name) async {

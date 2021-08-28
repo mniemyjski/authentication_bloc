@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:authentication_bloc/cubit/cubit.dart';
+import 'package:authentication_bloc/cubit/upload_to_storage/update_avatar_cubit.dart';
 import 'package:authentication_bloc/screens/screens.dart';
 import 'package:authentication_bloc/utilities/languages.dart';
 import 'package:authentication_bloc/widgets/widgets.dart';
@@ -109,7 +110,7 @@ _changeImage(BuildContext context) async {
       arguments: CropScreenArguments(uint8List: uint8List, isCircleUi: true),
     );
     if (image != null) {
-      context.read<AccountCubit>().updateAvatar(image as Uint8List);
+      context.read<UpdateAvatarCubit>().update(image as Uint8List);
     }
   }
 }

@@ -1,4 +1,4 @@
-import 'package:authentication_bloc/cubit/upload_to_storage/upload_to_storage_cubit.dart';
+import 'package:authentication_bloc/cubit/upload_to_storage/update_avatar_cubit.dart';
 import 'package:authentication_bloc/repositories/preference_repository.dart';
 import 'package:authentication_bloc/screens/screens.dart';
 import 'package:authentication_bloc/utilities/utilities.dart';
@@ -68,15 +68,9 @@ class MyApp extends StatelessWidget {
               authRepository: context.read<AuthRepository>(),
             ),
           ),
-          BlocProvider<UploadToStorageCubit>(
-            create: (context) => UploadToStorageCubit(
-              context.read<StorageRepository>(),
-            ),
-          ),
           BlocProvider<AccountCubit>(
             create: (context) => AccountCubit(
               authBloc: context.read<AuthBloc>(),
-              uploadToStorageCubit: context.read<UploadToStorageCubit>(),
               accountRepository: context.read<AccountRepository>(),
             ),
           ),
@@ -86,6 +80,13 @@ class MyApp extends StatelessWidget {
               preferenceRepository: context.read<PreferenceRepository>(),
             ),
           ),
+          BlocProvider<UpdateAvatarCubit>(
+            create: (context) => UpdateAvatarCubit(
+              accountCubit: context.read<AccountCubit>(),
+              accountRepository: context.read<AccountRepository>(),
+              storageRepository: context.read<StorageRepository>(),
+            ),
+          ),
         ],
         child: BlocBuilder<DarkModeCubit, bool>(
           builder: (context, state) {
@@ -93,7 +94,7 @@ class MyApp extends StatelessWidget {
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
               locale: context.locale,
-              title: 'Flutter Demo',
+              title: 'Authentication',
               theme: ThemeData(
                 fontFamily: 'Georgia',
                 primarySwatch: Colors.indigo,

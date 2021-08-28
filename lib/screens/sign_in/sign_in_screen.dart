@@ -1,3 +1,4 @@
+import 'package:authentication_bloc/cubit/cubit.dart';
 import 'package:authentication_bloc/repositories/repositories.dart';
 import 'package:authentication_bloc/screens/sign_in/cubit/sign_in_cubit.dart';
 import 'package:authentication_bloc/screens/sign_in/widgets/button_sign_in_with_email.dart';
@@ -53,20 +54,24 @@ class SignInScreen extends StatelessWidget {
                 Center(
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 0),
-                    child: RichText(
-                        text: TextSpan(
-                      style: TextStyle(fontSize: 56),
-                      children: [
-                        TextSpan(
-                          text: Constants.app_name_first(),
-                          style: GoogleFonts.markaziText(fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text: Constants.app_name_second(),
-                          style: GoogleFonts.markaziText(color: Colors.blue[800], fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )),
+                    child: BlocBuilder<DarkModeCubit, bool>(
+                      builder: (context, state) {
+                        return RichText(
+                            text: TextSpan(
+                          style: TextStyle(fontSize: 56),
+                          children: [
+                            TextSpan(
+                              text: Constants.app_name_first(),
+                              style: GoogleFonts.markaziText(fontWeight: FontWeight.bold, color: state ? Colors.white : Colors.black87),
+                            ),
+                            TextSpan(
+                              text: Constants.app_name_second(),
+                              style: GoogleFonts.markaziText(color: Colors.blue[800], fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ));
+                      },
+                    ),
                   ),
                 ),
                 if (state.signInFormType == SignInFormType.initial) ButtonSignInWithGoogle(),

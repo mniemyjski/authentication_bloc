@@ -1,4 +1,5 @@
 import 'package:authentication_bloc/cubit/account/account_cubit.dart';
+import 'package:authentication_bloc/cubit/cubit.dart';
 import 'package:authentication_bloc/repositories/repositories.dart';
 import 'package:authentication_bloc/screens/home/cubit/home_cubit.dart';
 import 'package:authentication_bloc/utilities/languages.dart';

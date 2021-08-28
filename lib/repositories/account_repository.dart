@@ -7,9 +7,9 @@ abstract class _BaseAccountRepository {
   streamMyAccount(String uid);
   getAccount(String id);
   Future<bool> nameAvailable(String name);
-  createAccount(Account account);
-  updateAccount(Account account);
-  deleteAccount(Account account);
+  Future<void> createAccount(Account account);
+  Future<void> updateAccount(Account account);
+  Future<void> deleteAccount(Account account);
 }
 
 class AccountRepository extends _BaseAccountRepository {
@@ -19,13 +19,13 @@ class AccountRepository extends _BaseAccountRepository {
       );
 
   @override
-  createAccount(Account account) => _ref.doc(account.uid).set(account);
+  Future<void> createAccount(Account account) => _ref.doc(account.uid).set(account);
 
   @override
-  deleteAccount(Account account) => _ref.doc(account.uid).delete();
+  Future<void> deleteAccount(Account account) => _ref.doc(account.uid).delete();
 
   @override
-  updateAccount(Account account) => _ref.doc(account.uid).set(account);
+  Future<void> updateAccount(Account account) => _ref.doc(account.uid).set(account);
 
   @override
   getAccount(String id) => _ref.doc(id).get();
