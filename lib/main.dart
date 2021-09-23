@@ -2,6 +2,7 @@ import 'package:authentication_bloc/cubit/upload_to_storage/update_avatar_cubit.
 import 'package:authentication_bloc/repositories/preference_repository.dart';
 import 'package:authentication_bloc/screens/screens.dart';
 import 'package:authentication_bloc/utilities/utilities.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization_loader/easy_localization_loader.dart';
 import 'package:equatable/equatable.dart';
@@ -76,7 +77,7 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<PreferenceCubit>(
             create: (context) => PreferenceCubit(
-              authBloc: context.read<AuthBloc>(),
+              accountCubit: context.read<AccountCubit>(),
               preferenceRepository: context.read<PreferenceRepository>(),
             ),
           ),
@@ -95,6 +96,8 @@ class MyApp extends StatelessWidget {
               supportedLocales: context.supportedLocales,
               locale: context.locale,
               title: 'Authentication',
+              builder: BotToastInit(),
+              navigatorObservers: [BotToastNavigatorObserver()],
               theme: ThemeData(
                 fontFamily: 'Georgia',
                 primarySwatch: Colors.indigo,

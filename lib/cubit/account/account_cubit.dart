@@ -21,20 +21,45 @@ class AccountCubit extends Cubit<AccountState> {
   })  : _accountRepository = accountRepository,
         _authBloc = authBloc,
         super(AccountState.unknown()) {
+    _init();
+  }
+
+  void _init() {
+    if (_authBloc.state.status == EAuthStatus.authenticated) _sub(_authBloc.state);
+
     _authSubscription = _authBloc.stream.listen((event) {
-      if (event.status == EAuthStatus.authenticated) {
-        _accountSubscription = _accountRepository.streamMyAccount(event.user!.uid).listen((account) {
-          account != null ? emit(AccountState.created(account)) : emit(AccountState.unCreated());
-        });
-      } else {
-        try {
-          _accountSubscription.cancel();
-        } catch (e) {
-          Failure(message: "Not Initialization");
-        }
-        emit(AccountState.unknown());
-      }
+      _sub(event);
     });
+  }
+
+  void _sub(AuthState event) {
+    if (event.status == EAuthStatus.authenticated) {
+      _accountSubscription = _accountRepository.streamMyAccount(event.user!.uid).listen((account) {
+        if (account != null) {
+          if (state.account != account || state.status != EAccountStatus.created) emit(AccountState.created(account));
+        } else if (state.status != EAccountStatus.uncreated) {
+          emit(AccountState.unCreated());
+        }
+      });
+    } else {
+      try {
+        _accountSubscription.cancel();
+      } catch (e) {
+        Failure(message: "Not Initialization");
+      }
+      if (state.status != EAccountStatus.unknown) emit(AccountState.unknown());
+    }
+  }
+
+  @override
+  Future<void> close() {
+    try {
+      _authSubscription.cancel();
+    } catch (e) {}
+    try {
+      _accountSubscription.cancel();
+    } catch (e) {}
+    return super.close();
   }
 
   Future<bool> updateName(String name) async {
@@ -62,12 +87,5 @@ class AccountCubit extends Cubit<AccountState> {
     } else {
       return false;
     }
-  }
-
-  @override
-  Future<void> close() {
-    _accountSubscription.cancel();
-    _authSubscription.cancel();
-    return super.close();
   }
 }

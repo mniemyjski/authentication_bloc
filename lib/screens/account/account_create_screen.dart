@@ -1,10 +1,7 @@
 import 'package:authentication_bloc/bloc/auth/auth_bloc.dart';
 import 'package:authentication_bloc/cubit/cubit.dart';
-import 'package:authentication_bloc/models/account.dart';
-import 'package:authentication_bloc/repositories/repositories.dart';
 import 'package:authentication_bloc/utilities/languages.dart';
 import 'package:authentication_bloc/utilities/validators.dart';
-import 'package:authentication_bloc/widgets/custom_drawer/custom_drawer.dart';
 import 'package:authentication_bloc/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,7 +71,7 @@ class _AccountCreateScreenState extends State<AccountCreateScreen> {
                       bool done = await context.read<AccountCubit>().createAccount(_controllerName.text);
                       await context.read<PreferenceCubit>().createPreference();
 
-                      if (!done) customFlashBar(context, Languages.name_not_available());
+                      if (!done) customFlashBar(Languages.name_not_available());
                     }
                   }),
             ],

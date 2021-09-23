@@ -123,6 +123,6 @@ _save({required BuildContext context, required String name}) async {
   if (updated) {
     Navigator.pop(context);
   } else {
-    customFlashBar(context, Languages.name_not_available());
+    customFlashBar(Languages.name_not_available());
   }
 }
